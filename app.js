@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
+var _ = require("lodash");
 
 const homeStartingContent =
   "Bacon ipsum dolor amet short ribs ham hock picanha porchetta spare ribs meatloaf. Shoulder boudin swine hamburger sirloin leberkas buffalo tenderloin strip steak chislic corned beef pork belly. Shoulder andouille beef ribs, landjaeger tongue pork belly meatloaf. Biltong ground round buffalo, pork loin burgdoggen chislic picanha pancetta chuck doner sirloin.";
@@ -33,6 +34,21 @@ app.get("/contact", function(req,res){
 
 app.get("/compose", function(req,res){
   res.render("compose");
+})
+
+app.get("/posts/:postID", function(req,res){
+
+  if (posts.length === 0){
+    res.render("post", {postTitle: "404", postContents: "That post does not exist! Please try again"});
+  } else{
+      posts.forEach(function(post){
+      let lowPostID = _.lowerCase(req.params.postID);
+      let lowTitle = _.lowerCase(post.title);
+      if (lowPostID === lowTitle){
+        res.render("post", {postTitle: post.title, postContents: post.postContents});
+      }
+      
+  });}
 })
 
 app.post("/", function(req,res){
